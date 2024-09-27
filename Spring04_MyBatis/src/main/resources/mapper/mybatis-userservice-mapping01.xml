@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="UserMapper01">
+	<!-- 
+	#{VALUE} : 단순 파라미터 값을 의미함 (getter 아님)
+	 -->
+	<select id="getUser" parameterType="string" resultType="user">
+		SELECT
+		user_id AS userId,
+		user_name AS userName,
+		password,
+		age,
+		grade,
+		reg_date AS regDate
+		FROM users
+		WHERE user_id=#{VALUE}
+	</select>
+	<!-- VO의 필드명과 테이블의 컬럼명이 다르면 제대로 출력되지 않음 - 이럴 때 AS르 사용해야 함-->	
+
+	<!-- 
+	#{userId} : user.getId를 의미
+	 -->
+	<select id="findUserId" parameterType="user" resultType="string">
+		SELECT
+		user_name 
+		FROM
+		users
+		WHERE user_id=#{userId}
+	</select>
+</mapper>
