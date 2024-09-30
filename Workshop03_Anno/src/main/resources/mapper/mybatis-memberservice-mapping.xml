@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+parameterType은 SqlMapConfig.xml의 alias와 같아야 함.
+ -->
+<mapper namespace="MemberMapper">
+	<sql id="select-member">
+		SELECT
+		id, password, name, address
+		FROM member
+	</sql>
+	<sql id="orderby-id-asc">
+		ORDER BY id
+	</sql>
+	
+	<insert id="registerMember" parameterType="memberVO">
+		INSERT
+		INTO member(id, password, name, address)
+		VALUES(#{id}, #{password}, #{name}, #{address})
+	</insert>
+	
+	<delete id="deleteMember" parameterType="string">
+		DELETE
+		FROM member
+		WHERE id=#{VALUE}
+	</delete>
+	
+	<update id="updateMember" parameterType="memberVO">
+		UPDATE member
+		SET name=#{name}
+		WHERE id=#{id}
+	</update>
+	
+	<select id="findMember" parameterType="string" resultType="memberVO">
+		<include refid="select-member"/>
+		<where>
+			<if test="_parameter != null">
+			id LIKE CONCAT(#{_parameter}, '%')
+			</if>
+		</where>
+		<include refid="orderby-id-asc"/>
+	</select>
+	
+	<select id="idExist" parameterType="string" resultType="boolean">
+		SELECT IF(COUNT(*) = 1, 1, 0)
+		FROM member
+		WHERE id = #{id}
+	</select>
+</mapper>
